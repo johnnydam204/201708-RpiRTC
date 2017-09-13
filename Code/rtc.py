@@ -9,6 +9,8 @@ SLCH = 18
 SDI	 = 27
 LED  = 22
 
+playSong = "omxplayer -o local /home/pi/Desktop/RealtimeClock/TheDucGiuaGio.mp3 &"
+
 ledCode = [0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90]
 counter = 0
 
@@ -20,6 +22,11 @@ Day = 0
 Weekday = 0
 Month = 0
 Year = 0
+
+# Khai bao bien cai dat thoi gian chay nhac
+hrsSet = 13
+minSet = 33
+secSet = 0
 
 
 GPIO.setwarnings(False)
@@ -109,17 +116,30 @@ while True:
 	
 	# Hien thi thoi gian
 	displayTime()
-	# myPort.write("\r\nTime:" + Hour)    
-	time.sleep(0.1)
 	
-	#ser.write("\n\rWrite counter: %d" %(counter))
-	#ser.write("\n\rXin chao")
-	#counter += 1
-	#time.sleep(1)
-	
-	# ser.write("\r\nSay something:")
-    # rcv = ser.read()
-    # ser.write("\r\nYou sent:" + repr(rcv))
+	# Chay nhac
+	if Hour == hrsSet and Minute == minSet and Second == secSet:
+		os.system(playSong)
+		
+	#In ra ngay thang nam
+	print("Date: %s/%s/%s" % (Day, Month,Year))
+
+	# In ra Thu trong tuan
+	#print("Weekday: %s" % (Weekday))
+
+	if 		Weekday == 0: print 'Monday'
+	elif	Weekday == 1: print 'Tuesday'
+	elif	Weekday == 2: print 'Wednesdayday'
+	elif	Weekday == 3: print 'Thursday'
+	elif	Weekday == 4: print 'Friday'
+	elif	Weekday == 5: print 'Saturday'
+	elif	Weekday == 6: print 'Sunday'		
+
+	# In ra thoi gian
+	print("Time: %s:%s:%s" % (Hour, Minute,Second))		
+		
+	time.sleep(1)
+
 	
 
 	
