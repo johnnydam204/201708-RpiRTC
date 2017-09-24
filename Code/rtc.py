@@ -1,14 +1,9 @@
-import RPi.GPIO as GPIO
-import time
-import datetime
-import serial
-import os
-
 try:
-
-	# SLCH = 17
-	# SDI  = 27
-	# SCLK = 22
+	import RPi.GPIO as GPIO
+	import time
+	import datetime
+	import serial
+	import os
 
 	SLCH = 27
 	SCLK = 17
@@ -33,55 +28,37 @@ try:
 	Month = 9
 	Year = 2017
 
-
-
 	# =============== Xu ly doc file cai dat thoi gian ===============
 	file = open("/home/pi/Public/ThietLapThoiGianChayNhac.txt","r")
-	fileData = file.readlines()
-	file.close()
 
-	# Tach ky tu \n\r va cho vao mang moi
-	strData = []	
-	for i in fileData:
-		strData.append(i.strip("\n\r"))
+	fileData = file.read()
+	#print fileData
 
-	# Tach ky tu : va cho vao mang moi
-	strTime = []
-	for i in strData:
-		strTime.append(i.split(":"))
-		
-	strTimeSet = []	
-	for y in (for x in strTime):
-		strTimeSet.append(y)
+	# Chuyen ky tu xuong dong "\n" thanh ":" truoc khi tach
+	fileData = fileData.replace("\n",":")
+	#print fileData
 
-	
-	print strTimeSet
+	# Tach gia tri luu tru thoi gian
+	strTime = fileData.split(':')
 	#print strTime
-	
-	# timeList = []
-	# # Khai bao bien cai dat thoi gian chay nhac
-	# hrsSet = []
-	# minSet = []
-	# secSet = []
-	
-	# for word in strTimeSet:
-		# timeList.append(word.lower())
+	#print len(strTime)
 
-	# # Tach chuoi gia tri gio phut giay	
-	# strHour = timeList[0]
-	# strMinute = timeList[1]
-	# strSecond = timeList[2]
+	# Chuyen doi tu lmang ky tu sang mang so nguyen
+	arrTime = [int(strNumber) for strNumber in strTime]              
+	#print arrTime 
 
-	# # Chuyen doi chuoi sang so
-	# hrsSet = int(strHour)
-	# minSet = int(strMinute)
-	# secSet = int(strSecond)
+	# Tach mang cai dat gio, phut, giay
+	hrsSet = [0]*20  #Mang chua gio,  gom 20 phan tu, gia tri khoi tao la 0
+	minSet = [0]*20  #Mang chua phut, gom 20 phan tu, gia tri khoi tao la 0
+	secSet = [0]*20  #Mang chua giay, gom 20 phan tu, gia tri khoi tao la 0
 
-	# Debug doan tach thoi gian cai dat
-	# print strHour
-	# print strMinute
-	# print strSecond
-	# print hrsSet + minSet + secSet
+	for i in range(0,20):               
+		hrsSet[i] = arrTime[i*3 +0]
+		minSet[i] = arrTime[i*3 +1]
+		secSet[i] = arrTime[i*3 +2]
+	#print hrsSet
+	#print minSet
+	#print secSet
 
 	# ======================= Thiet lap GPIO ==========================
 	#GPIO.setwarnings(False)
@@ -165,38 +142,40 @@ try:
 	# time.sleep(1)
 
 	while True:
-		# # Doc thoi gian
-		# MyDateTime = datetime.datetime.now()
+		# Doc thoi gian
+		MyDateTime = datetime.datetime.now()
 
-		# #Tach thoi gian
-		# Hour = MyDateTime.hour
-		# Minute = MyDateTime.minute
-		# Second = MyDateTime.second
-		# Day = MyDateTime.day   			#Day of month
-		# Weekday = MyDateTime.weekday()	#Day of week
-		# Month = MyDateTime.month
-		# Year = MyDateTime.year
+		#Tach thoi gian
+		Hour = MyDateTime.hour
+		Minute = MyDateTime.minute
+		Second = MyDateTime.second
+		Day = MyDateTime.day   			#Day of month
+		Weekday = MyDateTime.weekday()	#Day of week
+		Month = MyDateTime.month
+		Year = MyDateTime.year
 		
-		# # Chay nhac
-		# if (Hour == hrsSet and Minute == minSet and Second == secSet):
-			# os.system(playSong)
-		# displayTime()
+		# Chay nhac
+		for i in range(0,20): 
+			if(Hour != 0):
+				if (Hour == hrsSet[i] and Minute == minSet[i] and Second == secSet[i]):
+					os.system(playSong)
+		displayTime()
 			
-		# #In ra ngay thang nam
-		# print("Date: %s/%s/%s" % (Day, Month,Year))
+		#In ra ngay thang nam
+		print("Date: %s/%s/%s" % (Day, Month,Year))
 
-		# # In ra Thu trong tuan
-		# #print("Weekday: %s" % (Weekday))
-		# if 		Weekday == 0: print 'Monday'
-		# elif	Weekday == 1: print 'Tuesday'
-		# elif	Weekday == 2: print 'Wednesdayday'
-		# elif	Weekday == 3: print 'Thursday'
-		# elif	Weekday == 4: print 'Friday'
-		# elif	Weekday == 5: print 'Saturday'
-		# elif	Weekday == 6: print 'Sunday'		
+		# In ra Thu trong tuan
+		#print("Weekday: %s" % (Weekday))
+		if 		Weekday == 0: print 'Monday'
+		elif	Weekday == 1: print 'Tuesday'
+		elif	Weekday == 2: print 'Wednesdayday'
+		elif	Weekday == 3: print 'Thursday'
+		elif	Weekday == 4: print 'Friday'
+		elif	Weekday == 5: print 'Saturday'
+		elif	Weekday == 6: print 'Sunday'		
 
-		# # In ra thoi gian
-		# print("Time: %s:%s:%s" % (Hour, Minute,Second))		
+		# In ra thoi gian
+		print("Time: %s:%s:%s" % (Hour, Minute,Second))		
 		time.sleep(1)
 		
 except KeyboardInterrupt:
