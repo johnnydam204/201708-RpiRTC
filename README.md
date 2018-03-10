@@ -27,4 +27,3 @@ RpiClock - Digital Clock and Reminder
 13. Reboot
 	sudo reboot -n
 14. (Optional: Install and config Samba to share folder between RPi and Window PC (copy in CaiDatThoiGian.txt))
-
